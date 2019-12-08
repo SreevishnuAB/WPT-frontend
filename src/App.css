@@ -3,3 +3,14 @@
   background-color: #FA0000 !important;
   border-color: #FA0000;
 }
+.MuiOutlinedInput-notchedOutline, label,fieldset{
+  color: #23C94A !important;
+  border-color: #23C94A !important;
+}
+.MuiInputBase-root{
+  color: #ffffff !important;
+}
+.btn-submit:hover{
+  color: #001215 !important;
+  background-color: #23C94A !important;
+}

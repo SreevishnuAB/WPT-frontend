@@ -6,9 +6,6 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -23,7 +20,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
   },
   drawer: {
-    zIndex: theme.zIndex.appBar-1,
     [theme.breakpoints.up('sm')]: {
       width: drawerWidth,
       flexShrink: 0,
@@ -36,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   toolbar: {
-    backgroundColor: '#243447',
+    backgroundColor: '#021D25',
     borderTopStyle: 'solid',
     borderBottomStyle: 'solid',
     borderWidth: '1px',
@@ -46,8 +42,10 @@ const useStyles = makeStyles(theme => ({
   tlbrPlcehldr: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: '#243447',
-    color: '#ffffff'
+    backgroundColor: '#021D25',
+    color: '#23C94A',
+    borderWidth:'1px 1px 1px 1px',
+    borderColor:'#23C94A',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -72,7 +70,8 @@ const useStyles = makeStyles(theme => ({
     borderWidth: '1px',
     borderColor: '#23C94A',
     padding: '5px',
-    color: '#23C94A'
+    color: '#23C94A',
+    backgroundColor: '#001215'
   },
   content: {
     flexGrow: 1,
@@ -82,7 +81,26 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderTopWidth: '1px',
+    borderTopStyle: 'solid',
+    borderColor: '#23C94A',
+  },
+  drawerBtnContainer: {
+    verticalAlign: 'top',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  dbBtn: {
+    marginTop: '5px',
+    padding: '15px 10px 15px 10px',
+    borderColor: '#23C94A',
+    borderStyle: 'solid',
+    borderWidth: '1px 0px 1px 0px',
+    borderRadius: '0',
+    color: '#23C94A',
+    backgroundColor: '#001215'
   }
 }));
 
@@ -91,23 +109,38 @@ export default function NavBar(props) {
   const { container } = props;
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [activeTab,setActiveTab] = React.useState('');
 
+  const handleTabPress = (event)=>{
+    event.persist();
+    let activeBtn;
+    if(!event.target.classList.contains("db-btn0") && !event.target.classList.contains("db-btn1"))
+//      console.log(event.target.parentElement.classList);
+      activeBtn = event.target.parentElement.classList[3];
+    else
+//      console.log(event.target.classList);
+      activeBtn = event.target.classList[3];
+//    console.log(activeBtn);
+    if(activeTab === '' || activeTab !== activeBtn)
+      setActiveTab(activeBtn);
+  }
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const items = (props.grouphead === true)?
-                  ["Work Reports By Date","Work Reports By User"] :
-                  ["Create Work Report", "View Work Reports"];
- 
+  const handleLogout = ()=>{
+    let newAuthObj = {state:false,user:{name:"",designation:""}};
+    props.onLogout(newAuthObj);
+  }
+
   const drawer = (
     <div>
       <div className={`${classes.tlbrPlcehldr} ${classes.drawerBar}`}>
         <Typography variant="h5">
-          User
+          {props.user.name}
           <br/>
           <Typography style={{fontSize: '15px'}} variant="h6" component="span">
-            Group Head
+            {props.user.designation}
           </Typography>
         </Typography>
         <IconButton style={{color:'#23C94A'}} aria-label="close drawer" component="span" onClick={handleDrawerToggle}>
@@ -115,13 +148,11 @@ export default function NavBar(props) {
         </IconButton>
       </div>
       <Divider style={{backgroundColor: '#23C94A'}}/>
-      <List>
-        {items.map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemText primary={text} />
-          </ListItem>
+        <div className={classes.drawerBtnContainer}>
+        {props.tablabels.map((text, index) => (
+          <Button className={`db-btn${index} ${classes.dbBtn}`} onClick={handleTabPress} key={index}>{text}</Button>
         ))}
-      </List>
+        </div>
       <Divider style={{backgroundColor: '#23C94A'}} />
     </div>
   );
@@ -137,7 +168,7 @@ export default function NavBar(props) {
           <Typography variant="h6" className={classes.title}>
             {props.header}
           </Typography>
-          <Button className={`${props.login ? classes.condRend:classes.logoutBtn} btn-logout`} color="inherit">Logout</Button>
+          <Button className={`${props.login ? classes.condRend:classes.logoutBtn} btn-logout`} onClick={handleLogout} color="inherit">Logout</Button>
         </Toolbar>
       </AppBar>
       {!props.login && <nav className={classes.drawer} aria-label="mailbox folders">
@@ -171,6 +202,11 @@ export default function NavBar(props) {
           </Drawer>
         </Hidden>
       </nav>}
+      <main className={classes.tlbrPlcehldr}>
+        <div className={classes.content}>
+          {props.contents}
+        </div>
+      </main>
     </div>
   );
 }
