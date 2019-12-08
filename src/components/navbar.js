@@ -101,7 +101,18 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '0',
     color: '#23C94A',
     backgroundColor: '#001215'
+  },
+  dbBtnActive: {
+    marginTop: '5px',
+    padding: '15px 10px 15px 10px',
+    borderColor: '#23C94A',
+    borderStyle: 'solid',
+    borderWidth: '1px 0px 1px 0px',
+    borderRadius: '0',
+    color: '#001215',
+    backgroundColor: '#23C94A'
   }
+
 }));
 
 export default function NavBar(props) {
@@ -109,7 +120,7 @@ export default function NavBar(props) {
   const { container } = props;
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [activeTab,setActiveTab] = React.useState('');
+  const [activeTab,setActiveTab] = React.useState('db-btn0');
 
   const handleTabPress = (event)=>{
     event.persist();
@@ -121,8 +132,10 @@ export default function NavBar(props) {
 //      console.log(event.target.classList);
       activeBtn = event.target.classList[3];
 //    console.log(activeBtn);
-    if(activeTab === '' || activeTab !== activeBtn)
+    if(activeTab === '' || activeTab !== activeBtn){
       setActiveTab(activeBtn);
+      props.onTabSwitch(activeBtn);
+    }
   }
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -150,7 +163,7 @@ export default function NavBar(props) {
       <Divider style={{backgroundColor: '#23C94A'}}/>
         <div className={classes.drawerBtnContainer}>
         {props.tablabels.map((text, index) => (
-          <Button className={`db-btn${index} ${classes.dbBtn}`} onClick={handleTabPress} key={index}>{text}</Button>
+          <Button className={(activeTab === `db-btn${index}`)?`db-btn${index} ${classes.dbBtnActive} btn-db`:`db-btn${index} ${classes.dbBtn} btn-db`} onClick={handleTabPress} key={index}>{text}</Button>
         ))}
         </div>
       <Divider style={{backgroundColor: '#23C94A'}} />
@@ -166,7 +179,7 @@ export default function NavBar(props) {
             <MenuIcon className={props.login ? classes.condRend : ''} />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {props.header}
+            Work Progress Tracker
           </Typography>
           <Button className={`${props.login ? classes.condRend:classes.logoutBtn} btn-logout`} onClick={handleLogout} color="inherit">Logout</Button>
         </Toolbar>
@@ -202,11 +215,6 @@ export default function NavBar(props) {
           </Drawer>
         </Hidden>
       </nav>}
-      <main className={classes.tlbrPlcehldr}>
-        <div className={classes.content}>
-          {props.contents}
-        </div>
-      </main>
     </div>
   );
 }
