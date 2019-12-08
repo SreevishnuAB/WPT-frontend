@@ -14,6 +14,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import ChevronLeftOutlinedIcon from '@material-ui/icons/ChevronLeftOutlined';
 
 const drawerWidth = 240;
 
@@ -22,18 +23,17 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
   },
   drawer: {
+    zIndex: theme.zIndex.appBar-1,
     [theme.breakpoints.up('sm')]: {
       width: drawerWidth,
       flexShrink: 0,
-    },
+    }
   },
   appBar: {
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
-      zIndex: theme.zIndex.drawer + 1,
     },
-    zIndex: theme.zIndex.drawer + 1,
   },
   toolbar: {
     backgroundColor: '#243447',
@@ -46,11 +46,13 @@ const useStyles = makeStyles(theme => ({
   tlbrPlcehldr: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
+    backgroundColor: '#243447',
+    color: '#ffffff'
   },
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
-      display: 'none',
+      visibility: 'hidden',
     },
     color: '#23C94A',
   },
@@ -58,8 +60,12 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     color: '#23C94A'
   },
+  fullWidthAppbar: {
+    width:'100%',
+    marginLeft: '0'
+  },
   condRend:{
-    display:'none',
+    visibility: 'hidden',
   },
   logoutBtn: {
     borderStyle: 'solid',
@@ -72,6 +78,12 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  drawerBar: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  }
 }));
 
 export default function NavBar(props) {
@@ -80,6 +92,9 @@ export default function NavBar(props) {
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   const items = (props.grouphead === true)?
                   ["Work Reports By Date","Work Reports By User"] :
@@ -87,8 +102,19 @@ export default function NavBar(props) {
  
   const drawer = (
     <div>
-      <div className={classes.tlbrPlcehldr} />
-      <Divider />
+      <div className={`${classes.tlbrPlcehldr} ${classes.drawerBar}`}>
+        <Typography variant="h5">
+          User
+          <br/>
+          <Typography style={{fontSize: '15px'}} variant="h6" component="span">
+            Group Head
+          </Typography>
+        </Typography>
+        <IconButton style={{color:'#23C94A'}} aria-label="close drawer" component="span" onClick={handleDrawerToggle}>
+          {mobileOpen && <ChevronLeftOutlinedIcon />}
+        </IconButton>
+      </div>
+      <Divider style={{backgroundColor: '#23C94A'}}/>
       <List>
         {items.map((text, index) => (
           <ListItem button key={text}>
@@ -96,18 +122,14 @@ export default function NavBar(props) {
           </ListItem>
         ))}
       </List>
-      <Divider />
+      <Divider style={{backgroundColor: '#23C94A'}} />
     </div>
   );
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={!props.login ? classes.appBar : classes.fullWidthAppbar}>
         <Toolbar className={classes.toolbar}>
           <IconButton edge="start" className={props.login ? classes.condRend :classes.menuButton} aria-label="open drawer" onClick={handleDrawerToggle}>
             <MenuIcon className={props.login ? classes.condRend : ''} />
@@ -118,7 +140,7 @@ export default function NavBar(props) {
           <Button className={`${props.login ? classes.condRend:classes.logoutBtn} btn-logout`} color="inherit">Logout</Button>
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer} aria-label="mailbox folders">
+      {!props.login && <nav className={classes.drawer} aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="js">
           <Drawer
@@ -148,7 +170,7 @@ export default function NavBar(props) {
             {drawer}
           </Drawer>
         </Hidden>
-      </nav>
+      </nav>}
     </div>
   );
 }
