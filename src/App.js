@@ -32,7 +32,7 @@ export default function App(props) {
       {(auth.user.designation.toLowerCase() === "faculty" && currentTab === "db-btn0")?<CreateWorkReport/>:
        (auth.user.designation.toLowerCase() === "faculty" && currentTab === "db-btn1")?<ViewWorkReport/>:
        (auth.user.designation.toLowerCase() === "group head" && currentTab === "db-btn0")?<ViewWorkRepByDate/>:
-       (auth.user.designation.toLowerCase() === "group head" && currentTab === "db-btn0")?<ViewWorkRepByUser/>:''
+       (auth.user.designation.toLowerCase() === "group head" && currentTab === "db-btn1")?<ViewWorkRepByUser/>:''
        /*TODO error component*/}
     </React.Fragment>
   );
