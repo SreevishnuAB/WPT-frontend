@@ -18,3 +18,33 @@
   color: #001215 !important;
   background-color: #23C94A !important;
 }
+.DayPickerInput, .DayPickerInput input{
+  background-color: #001215 !important;
+  color: #23C94A !important;
+  border-style: none;
+  border-width: 0px;
+  outline-style: none;
+}
+
+.DayPicker{
+  background-color: #001215 !important;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #23C94A;
+  width: 250px;
+  color: #23C94A;
+}
+
+ul, li{
+  background-color: #021D25 !important;
+  color: #23C94A !important;
+}
+ul{
+  border: solid 1px #23C94A !important;
+}
+.MuiSelect-iconOutlined{
+  color: #23C94A !important;
+}
+#select-dept, #select-sub-dept, #select-sem{
+  text-align: left;
+}

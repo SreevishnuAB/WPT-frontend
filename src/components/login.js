@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme)=>({
     textAlign: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor:'#001215'
+    backgroundColor:'#001215',
   },
   submitBtn:{
     color: '#23C94A',
@@ -80,19 +80,21 @@ export default function Login(props){
     <div className={props.login?classes.fullWidthRoot:classes.root}>
       <div className={classes.form}>
         <TextField
-          className={`${classes.formElement} form-element`}
+          className={classes.formElement}
           id="outlined-username-input"
           label="Username"
           variant="outlined"
+          size="small"
           value={username}
           onChange={(e)=>{setUsername(e.target.value)}}
         />
         <TextField
-          className={`${classes.formElement} form-element`}
+          className={classes.formElement}
           id="outlined-password-input"
           label="Password"
           type="password"
           variant="outlined"
+          size="small"
           value={password}
           onChange={(e)=>{setPassword(e.target.value)}}
         />
