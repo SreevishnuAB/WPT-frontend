@@ -9,7 +9,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import DayPicker from 'react-day-picker';
 import Dialog from '@material-ui/core/Dialog'; 
 import DialogTitle from '@material-ui/core/DialogTitle'
+import Button from '@material-ui/core/Button';
 import 'react-day-picker/lib/style.css';
+import ToastNotification from './toast';
 
 
 
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme)=>({
   },
   toolbarPlaceholder: theme.mixins.toolbar,
   form: {
-    marginTop: '20px',
+    marginTop: '30px',
     borderStyle: 'solid',
     borderWidth: '1px',
     borderColor: '#23C94A',
@@ -51,21 +53,26 @@ const useStyles = makeStyles((theme)=>({
       width:'350px',
     },
   },
+  formRowBtn: {
+    marginTop: '15px',
+    display: 'flex',
+    justifyContent: 'center'
+  },
   formElement: {
     width: '250px',
     backgroundColor:'#001215',
     textAlign:'center',
     margin: '0px 10px 20px 10px',
   },
-  submitBtn:{
+  createBtn:{
     color: '#23C94A',
     backgroundColor: '#001215',
     borderWidth: '1px',
     borderStyle: 'solid',
     borderColor: '#23C94A',
-    width: '50px',
     padding: '5px 35px 5px 35px',
-    marginLeft: '90px'
+    width: '200px',
+    margin: '0px 10px 20px 10px',
   },
   DialogTitle: {
     color: '#23C94A',
@@ -73,7 +80,7 @@ const useStyles = makeStyles((theme)=>({
     borderStyle: 'solid',
     borderWidth: '1px',
     borderColor: '#23C94A'
-  }
+  },
 }));
 
 export default function CreateWorkReport(props){
@@ -89,6 +96,9 @@ export default function CreateWorkReport(props){
   const [semLabelWidth, setSemLabelWidth] = useState(0);
   const [yearLabelWidth, setYearLabelWidth] = useState(0);
   const [openDialog,setOpenDialog] = useState(false);
+  const [openToast,setOpenToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState({error:false,messageText:''});
+
 
   const [desc,setDesc] = useState('');
   const [department,setDept] = useState('');
@@ -101,6 +111,10 @@ export default function CreateWorkReport(props){
     setOpenDialog(!openDialog);
   }
 
+  const handleToast = (open)=>{
+    setOpenToast(open);
+  }
+
   const handleDate = (day)=>{
     let dd = String(day.getDate()).padStart(2,'0');
     let mm = String(day.getMonth() + 1).padStart(2,'0');
@@ -109,6 +123,14 @@ export default function CreateWorkReport(props){
     setOpenDialog(!openDialog);
   }
 
+  const handleCreate = ()=>{
+    /*TODO post work report to db*/
+    if(!desc || !department || !subDepartment || !semester || !batch || !date)
+      setToastMessage({error:true,messageText:"All fields must be filled"});
+    else
+      setToastMessage({error:false, messageText:`Description: ${desc}\nDept: ${department}\nSub-dept: ${subDepartment}\nSem: ${semester}\nYear: ${batch}\nDate: ${date}`});
+    setOpenToast(!openToast);
+  }
   React.useEffect(() => {
     setDeptLabelWidth(deptLabel.current.offsetWidth);
   }, []);
@@ -127,17 +149,17 @@ export default function CreateWorkReport(props){
 
   let dept = ['CIR']; //add other departments here, if any
   const optionsDept = dept.map((value,index) => (
-    <MenuItem value={value}>{value}</MenuItem>
+    <MenuItem key={index} value={value}>{value}</MenuItem>
     ));
 
   let subDept = ["Training", "Placement", "Support"];
   const optionsSubDept = subDept.map((value,index) => (
-    <MenuItem value={value}>{value}</MenuItem>
+    <MenuItem key={index} value={value}>{value}</MenuItem>
     ));
 
   let sem = ["S1", "S2"];
   const optionsSem = sem.map((value,index) => (
-    <MenuItem value={value}>{value}</MenuItem>
+    <MenuItem key={index} value={value}>{value}</MenuItem>
     ));
 
   let curDate = new Date();
@@ -147,9 +169,8 @@ export default function CreateWorkReport(props){
   let years = (new Array(5)).fill(0);
 
   const optionsYear = years.map((value, index)=>(
-    <MenuItem value={value + year}>{value + year--}</MenuItem>
+    <MenuItem key={index} value={value + year}>{value + year--}</MenuItem>
   ));
-  
 
   return(
     <div className={classes.root}>
@@ -166,7 +187,7 @@ export default function CreateWorkReport(props){
             onChange={(e)=>{setDesc(e.target.value)}}
           />
         </div>
-        <div class={classes.formRow}>
+        <div className={classes.formRow}>
           <TextField
             size="small"
             className={classes.formElement}
@@ -236,12 +257,15 @@ export default function CreateWorkReport(props){
             </Select>
           </FormControl>
         </div>
-        
+          <div className={classes.formRowBtn}>
+            <Button className={`${classes.createBtn} btn-create`} onClick={handleCreate}>Create Report</Button>
+          </div>
       </div>
       <Dialog open={openDialog} onClose={handleDialog}>
         <DialogTitle className={classes.DialogTitle} id="select-date">Select Date</DialogTitle>
-        <DayPicker selectedDays={date} onDayClick={handleDate} />
+        <DayPicker selectedDays={new Date(date)} onDayClick={handleDate} />
       </Dialog>
+      <ToastNotification open={openToast} onClose={handleToast} message={toastMessage}/>
     </div>
   );
 }

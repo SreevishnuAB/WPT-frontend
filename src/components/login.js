@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import '../App.css';
 import Button from '@material-ui/core/Button';
+import ToastNotification from './toast';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme)=>({
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme)=>({
     marginLeft: '0',
   },
   form: {
-    marginTop: '90px',
+    marginTop: '150px',
     borderStyle: 'solid',
     borderWidth: '1px',
     borderColor: '#23C94A',
@@ -64,9 +65,18 @@ export default function Login(props){
   const classes = useStyles();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [openToast,setOpenToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState({error:false,messageText:''});
+
+  const handleToast = (open)=>{
+    setOpenToast(open);
+  }
+
   const handleSubmit = ()=>{
-    if(!username || !password)
-      alert("Username and password cannot be empty");
+    if(!username || !password){
+      setToastMessage({error:true,messageText:"Username and password cannot be empty"});
+      setOpenToast(!openToast);
+    }
     else{
       /* Get user details from db, create auth obj */
       //for testing
@@ -100,6 +110,7 @@ export default function Login(props){
         />
         <Button className={`${classes.submitBtn} btn-submit`} onClick={handleSubmit}>Submit</Button>
       </div>
+      <ToastNotification open={openToast} onClose={handleToast} message={toastMessage}/>
     </div>
   );
 }

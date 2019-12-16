@@ -27,7 +27,7 @@ export default function App(props) {
 //                  console.log(contents);
   return(
     <React.Fragment>
-      <NavBar tablabels={items} login={!auth.state} user={auth.user} onTabSwitch={handleTab}onLogout={handleAccess}/>
+      <NavBar tablabels={items} login={!auth.state} user={auth.user} onTabSwitch={handleTab} onLogout={handleAccess}/>
       {!auth.state && <Login login={!auth.state} onLogin={handleAccess}/>}
       {(auth.user.designation.toLowerCase() === "faculty" && currentTab === "db-btn0")?<CreateWorkReport/>:
        (auth.user.designation.toLowerCase() === "faculty" && currentTab === "db-btn1")?<ViewWorkReport/>:

@@ -10,7 +10,7 @@
 .MuiInputBase-root{
   color: #ffffff !important;
 }
-.btn-submit:hover{
+.btn-create:hover,.btn-submit:hover{
   color: #001215 !important;
   background-color: #23C94A !important;
 }

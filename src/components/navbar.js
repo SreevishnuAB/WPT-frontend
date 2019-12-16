@@ -149,7 +149,7 @@ export default function NavBar(props) {
   const drawer = (
     <div>
       <div className={`${classes.tlbrPlcehldr} ${classes.drawerBar}`}>
-        <Typography variant="h5">
+        <Typography style={{fontSize:'20px',paddingTop:'5px'}} variant="h5">
           {props.user.name}
           <br/>
           <Typography style={{fontSize: '15px'}} variant="h6" component="span">
